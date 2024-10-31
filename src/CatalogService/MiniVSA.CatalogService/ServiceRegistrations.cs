@@ -9,7 +9,6 @@ using MiniVSA.CatalogService.Application.Behaviours;
 using MiniVSA.CatalogService.Application.Mappings;
 using MiniVSA.CatalogService.Infrastructure.Data;
 using MiniVSA.CatalogService.Infrastructure.Filters.Exception;
-using MiniVSA.CatalogService.Infrastructure.Filters.Swagger;
 using Weasel.Core;
 
 namespace MiniVSA.CatalogService
@@ -24,7 +23,6 @@ namespace MiniVSA.CatalogService
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MiniVSA.Catalog Service API", Version = "v1" });
-                c.OperationFilter<SwaggerFileOperationFilter>();
             });
 
             // Carter

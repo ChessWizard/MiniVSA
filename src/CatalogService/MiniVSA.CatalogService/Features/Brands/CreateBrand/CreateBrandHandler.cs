@@ -3,7 +3,7 @@ using Marten;
 using MediatR;
 using MiniVSA.CatalogService.Application.Constants;
 using MiniVSA.CatalogService.Application.Interfaces.CQRS.Command;
-using MiniVSA.CatalogService.Application.Models.Common;
+using MiniVSA.CatalogService.Application.Models.Common.Request;
 using MiniVSA.CatalogService.Application.Models.Result;
 using MiniVSA.CatalogService.Application.Utilities;
 using MiniVSA.CatalogService.Application.Validators;
@@ -15,7 +15,7 @@ using File = MiniVSA.CatalogService.Domain.Entities.File;
 namespace MiniVSA.CatalogService.Features.Brands.CreateBrand
 {
     public record CreateBrandCommand(string Name,
-                                     FileUploadModel FileUploadModel) : ICommand;
+                                     FileUploadRequestModel FileUploadModel) : ICommand;
 
     public class CreateBrandCommandValidator : BaseAbstractValidator<CreateBrandCommand>
     {
@@ -46,7 +46,7 @@ namespace MiniVSA.CatalogService.Features.Brands.CreateBrand
             (string FileName, string FilePath) fileData; 
             try
             {
-                fileData = await FileHelper.UploadFileToLocalAsync(request.FileUploadModel.Base64File, request.FileUploadModel.Name, FilePathConstants.BrandFilePaths.Image);
+                fileData = await FileHelper.UploadFileToLocalAsync(request.FileUploadModel.Base64File, FileType.Image, FilePathConstants.BrandFilePaths.Image);
             }
             catch (Exception)
             {

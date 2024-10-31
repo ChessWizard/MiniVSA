@@ -2,9 +2,9 @@
 using Swashbuckle.AspNetCore.Annotations;
 using System.Text.Json.Serialization;
 
-namespace MiniVSA.CatalogService.Application.Models.Common
+namespace MiniVSA.CatalogService.Application.Models.Common.Request
 {
-    public class FileUploadModel
+    public class FileUploadRequestModel
     {
         public byte[] Base64File { get; set; }
 

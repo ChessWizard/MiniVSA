@@ -25,6 +25,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Folder Include="Application\Models\Common\Response\" />
 		<Folder Include="Infrastructure\Configurations\" />
 		<Folder Include="Infrastructure\ExternalServices\" />
 		<Folder Include="Infrastructure\Repositories\" />

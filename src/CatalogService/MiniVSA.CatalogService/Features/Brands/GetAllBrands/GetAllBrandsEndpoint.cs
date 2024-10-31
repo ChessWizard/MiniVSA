@@ -1,7 +1,6 @@
 ﻿using Carter;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using MiniVSA.CatalogService.Application.Models.Common;
+using MiniVSA.CatalogService.Application.Models.Common.Request;
 using MiniVSA.CatalogService.Application.Utilities;
 
 namespace MiniVSA.CatalogService.Features.Brands.GetAllBrands

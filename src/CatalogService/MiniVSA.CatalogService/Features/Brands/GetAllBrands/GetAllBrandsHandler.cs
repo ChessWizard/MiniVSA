@@ -3,7 +3,7 @@ using Marten;
 using Marten.Pagination;
 using MiniVSA.CatalogService.Application.Constants;
 using MiniVSA.CatalogService.Application.Interfaces.CQRS.Query;
-using MiniVSA.CatalogService.Application.Models.Common;
+using MiniVSA.CatalogService.Application.Models.Common.Request;
 using MiniVSA.CatalogService.Application.Models.Result.Paging;
 using MiniVSA.CatalogService.Domain.Entities;
 using MiniVSA.CatalogService.Features.Brands.Common.Models;

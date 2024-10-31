@@ -1,13 +1,13 @@
 ﻿using Carter;
 using Mapster;
 using MediatR;
-using MiniVSA.CatalogService.Application.Models.Common;
+using MiniVSA.CatalogService.Application.Models.Common.Request;
 using MiniVSA.CatalogService.Application.Utilities;
 
 namespace MiniVSA.CatalogService.Features.Brands.CreateBrand
 {
     public record CreateBrandRequest(string Name,
-                                      FileUploadModel FileUploadModel);
+                                      FileUploadRequestModel FileUploadModel);
     public class CreateBrandEndpoint : ICarterModule
     {
         public void AddRoutes(IEndpointRouteBuilder app)

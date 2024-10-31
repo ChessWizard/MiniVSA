@@ -24,7 +24,17 @@
 
         public static Result<TData> Error(ErrorResult errorDto, int statusCode)
         {
-            return new Result<TData> { ErrorDto = errorDto, HttpStatusCode = statusCode, IsSuccessful = false };
+            return new Result<TData> { Data = default, ErrorDto = errorDto, HttpStatusCode = statusCode, IsSuccessful = false };
+        }
+
+        public static Result<TData> Error(TData data, ErrorResult errorDto, int statusCode)
+        {
+            return new Result<TData> { Data = data, ErrorDto = errorDto, HttpStatusCode = statusCode, IsSuccessful = false };
+        }
+
+        public static Result<TData> Error(TData data, int statusCode)
+        {
+            return new Result<TData> { Data = data, ErrorDto = default, HttpStatusCode = statusCode, IsSuccessful = false };
         }
 
         public static Result<TData> Error(string errorMessage, int statusCode, bool isShow = true)
@@ -32,6 +42,17 @@
             return new Result<TData>
             {
                 Data = default,
+                ErrorDto = new(errorMessage, isShow),
+                HttpStatusCode = statusCode,
+                IsSuccessful = false
+            };
+        }
+
+        public static Result<TData> Error(TData data, string errorMessage, int statusCode, bool isShow = true)
+        {
+            return new Result<TData>
+            {
+                Data = data,
                 ErrorDto = new(errorMessage, isShow),
                 HttpStatusCode = statusCode,
                 IsSuccessful = false

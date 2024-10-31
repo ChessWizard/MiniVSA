@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace MiniVSA.CatalogService.Application.Models.Common
+namespace MiniVSA.CatalogService.Application.Models.Common.Request
 {
     public class PaginationRequestModel
     {

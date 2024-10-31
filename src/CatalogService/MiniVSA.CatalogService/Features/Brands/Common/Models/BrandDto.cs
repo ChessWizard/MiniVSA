@@ -2,5 +2,5 @@
 {
     public record BrandDto(Guid Id,
                            string Name,
-                           string FilePath);
+                           string ImagePath);
 }

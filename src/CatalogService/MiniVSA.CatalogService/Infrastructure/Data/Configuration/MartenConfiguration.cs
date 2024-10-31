@@ -1,7 +1,7 @@
 ﻿using Marten;
 using MiniVSA.CatalogService.Domain.Entities;
 
-namespace MiniVSA.CatalogService.Infrastructure.Data
+namespace MiniVSA.CatalogService.Infrastructure.Data.Configuration
 {
     public class MartenConfiguration : IConfigureMarten
     {

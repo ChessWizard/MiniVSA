@@ -3,7 +3,7 @@ using MiniVSA.CatalogService.Domain.Entities.Common;
 
 namespace MiniVSA.CatalogService.Domain.Entities
 {
-    public class Brand : BaseEntity<Guid>, ISoftDeleted
+    public class Brand : AuditEntity<Guid>, ISoftDeleted
     {
         public string Name { get; set; }
 
@@ -12,5 +12,11 @@ namespace MiniVSA.CatalogService.Domain.Entities
         public bool Deleted { get; set; }
 
         public DateTimeOffset? DeletedAt { get; set; }
+
+        public void SoftDelete()
+        {
+            Deleted = true;
+            DeletedAt = DateTimeOffset.Now;
+        }
     }
 }

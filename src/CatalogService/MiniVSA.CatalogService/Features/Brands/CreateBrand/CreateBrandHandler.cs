@@ -15,7 +15,7 @@ using File = MiniVSA.CatalogService.Domain.Entities.File;
 namespace MiniVSA.CatalogService.Features.Brands.CreateBrand
 {
     public record CreateBrandCommand(string Name,
-                                     FileUploadRequestModel FileUploadModel) : ICommand;
+                                     FileUploadRequestModel Image) : ICommand;
 
     public class CreateBrandCommandValidator : BaseAbstractValidator<CreateBrandCommand>
     {
@@ -27,18 +27,18 @@ namespace MiniVSA.CatalogService.Features.Brands.CreateBrand
                 .NotEmpty().WithMessage(ValidationMessageConstants.Brand.BrandNameRequired)
                 .MaximumLength(MAX_BRAND_NAME_LENGTH).WithMessage(ValidationMessageConstants.Brand.BrandNameMaxLength(MAX_BRAND_NAME_LENGTH));
 
-            RuleForFileRequired(command => command.FileUploadModel, ValidationMessageConstants.Brand.BrandImageRequired);
-            RuleForFileSize(command => command.FileUploadModel, MAX_FILE_SIZE, ValidationMessageConstants.Brand.BrandImageMaxSize(MAX_FILE_SIZE));
-            RuleForFileAsImage(command => command.FileUploadModel, ValidationMessageConstants.Brand.BrandFileAsImage);
+            RuleForFileRequired(command => command.Image, ValidationMessageConstants.Brand.BrandImageRequired);
+            RuleForFileSize(command => command.Image, MAX_FILE_SIZE, ValidationMessageConstants.Brand.BrandImageMaxSize(MAX_FILE_SIZE));
+            RuleForFileAsImage(command => command.Image, ValidationMessageConstants.Brand.BrandFileAsImage);
         }
     }
 
     public class CreateBrandHandler(IDocumentSession documentSession) : IRequestHandler<CreateBrandCommand, Result<Unit>>
     {
-        public async Task<Result<Unit>> Handle(CreateBrandCommand request, CancellationToken cancellationToken)
+        public async Task<Result<Unit>> Handle(CreateBrandCommand command, CancellationToken cancellationToken)
         {
             var isExistBrand = await documentSession.Query<Brand>()
-                                              .AnyAsync(brand => brand.Name == request.Name, cancellationToken);
+                                              .AnyAsync(brand => brand.Name == command.Name, cancellationToken);
 
             if (isExistBrand)
                 return Result<Unit>.Error(ResponseMessageConstants.Brand.Error.BrandAlreadyExists, (int)HttpStatusCode.BadRequest);
@@ -46,7 +46,7 @@ namespace MiniVSA.CatalogService.Features.Brands.CreateBrand
             (string FileName, string FilePath) fileData; 
             try
             {
-                fileData = await FileHelper.UploadFileToLocalAsync(request.FileUploadModel.Base64File, FileType.Image, FilePathConstants.BrandFilePaths.Image);
+                fileData = await FileHelper.UploadFileToLocalAsync(command.Image.Base64File, FileType.Image, FilePathConstants.BrandFilePaths.Image);
             }
             catch (Exception)
             {
@@ -55,21 +55,22 @@ namespace MiniVSA.CatalogService.Features.Brands.CreateBrand
 
             Brand brand = new()
             {
-                Name = request.Name,
+                Name = command.Name,
                 Files =
                 [
                     new File
                     {
+                        Id = Guid.NewGuid(),
                         Name = fileData.FileName,
                         FileType = FileType.Image,
-                        Size = request.FileUploadModel.Size,
+                        Size = command.Image.Size,
                         CreatedDate = DateTimeOffset.Now,
                         Path = fileData.FilePath
                     }
                 ]
             };
 
-            documentSession.Store(brand);
+            documentSession.Insert(brand);
             await documentSession.SaveChangesAsync(cancellationToken);
             return Result<Unit>.Success(ResponseMessageConstants.Brand.Success.BrandCreated, (int)HttpStatusCode.Created);
         }

@@ -1,9 +1,10 @@
 ﻿using MiniVSA.CatalogService.Application.Interfaces.Entity;
+using MiniVSA.CatalogService.Domain.Entities.Common;
 using MiniVSA.CatalogService.Domain.Enums;
 
 namespace MiniVSA.CatalogService.Domain.Entities
 {
-    public class File : ICreatedOn
+    public class File : BaseEntity<Guid>, ICreatedOn
     {
         public string Name { get; set; }
 

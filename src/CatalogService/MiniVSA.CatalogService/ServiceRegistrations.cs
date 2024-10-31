@@ -7,7 +7,8 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.OpenApi.Models;
 using MiniVSA.CatalogService.Application.Behaviours;
 using MiniVSA.CatalogService.Application.Mappings;
-using MiniVSA.CatalogService.Infrastructure.Data;
+using MiniVSA.CatalogService.Infrastructure.Data.Configuration;
+using MiniVSA.CatalogService.Infrastructure.Data.Listeners;
 using MiniVSA.CatalogService.Infrastructure.Filters.Exception;
 using Weasel.Core;
 
@@ -67,6 +68,7 @@ namespace MiniVSA.CatalogService
                 options.Connection(configuration.GetConnectionString("DbConnection")!);
                 options.AutoCreateSchemaObjects = AutoCreate.None;
                 new MartenConfiguration().Configure(null, options);
+                options.Listeners.Add(new AuditListener());
             }).UseLightweightSessions();
         }
 

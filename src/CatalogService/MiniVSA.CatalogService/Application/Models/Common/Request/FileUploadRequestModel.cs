@@ -8,8 +8,6 @@ namespace MiniVSA.CatalogService.Application.Models.Common.Request
     {
         public byte[] Base64File { get; set; }
 
-        public string Name { get; set; }
-
         [JsonIgnore]
         [SwaggerIgnore]
         public double Size => FileHelper.GetFileSizeAsMB(Base64File);

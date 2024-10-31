@@ -9,21 +9,35 @@ namespace MiniVSA.CatalogService.Application.Validators
         // File Validation
         protected void RuleForFileRequired(Func<TModel, FileUploadRequestModel> selector, string message)
         {
-            RuleFor(model => selector(model).Base64File)
-                .NotNull().WithMessage(message)
-                .NotEmpty().WithMessage(message);
+            // TODO: PropertyName exception'da gösterilmeli
+            RuleFor(model => selector(model))
+                 .NotNull().WithMessage(message)
+                 .ChildRules(file =>
+                 {
+                     file.RuleFor(f => f.Base64File)
+                         .NotNull().WithMessage(message)
+                         .NotEmpty().WithMessage(message);
+                 });
         }
 
         protected void RuleForFileSize(Func<TModel, FileUploadRequestModel> selector, double maxValue, string message)
         {
-            RuleFor(x => selector(x).Size)
-                .LessThanOrEqualTo(maxValue).WithMessage(message);
+            RuleFor(model => selector(model))
+                 .ChildRules(file =>
+                 {
+                     file.RuleFor(f => f.Size)
+                         .LessThanOrEqualTo(maxValue).WithMessage(message);
+                 });
         }
 
         protected void RuleForFileAsImage(Func<TModel, FileUploadRequestModel> selector, string message)
         {
-            RuleFor(model => selector(model).Base64File)
-                .Must(ValidateFileAsImage).WithMessage(message);
+            RuleFor(model => selector(model))
+                 .ChildRules(file =>
+                 {
+                     file.RuleFor(f => f.Base64File)
+                         .Must(ValidateFileAsImage).WithMessage(message);
+                 });
         }
 
         #region Private Methods

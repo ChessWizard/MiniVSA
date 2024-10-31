@@ -7,7 +7,7 @@ using MiniVSA.CatalogService.Application.Utilities;
 namespace MiniVSA.CatalogService.Features.Brands.CreateBrand
 {
     public record CreateBrandRequest(string Name,
-                                      FileUploadRequestModel FileUploadModel);
+                                      FileUploadRequestModel Image);
     public class CreateBrandEndpoint : ICarterModule
     {
         public void AddRoutes(IEndpointRouteBuilder app)

@@ -38,14 +38,25 @@ namespace MiniVSA.CatalogService.Features.Brands.UpdateBrand
         }
     }
 
-    public class UpdateBrandCommandHandler(IDocumentSession documentSession) : ICommandHandler<UpdateBrandCommand, Result<Unit>>
+    public class UpdateBrandCommandHandler(IDocumentSession documentSession,
+        ILogger<UpdateBrandCommandHandler> logger,
+        IWebHostEnvironment webHostEnvironment) : ICommandHandler<UpdateBrandCommand, Result<Unit>>
     {
         public async Task<Result<Unit>> Handle(UpdateBrandCommand command, CancellationToken cancellationToken)
         {
+            if((command.Image is null || command.Image.Base64File is null) && string.IsNullOrWhiteSpace(command.Name))
+                return Result<Unit>.Error(ResponseMessageConstants.Brand.Error.AnyBrandUpdateNotFound, (int)HttpStatusCode.BadRequest);
+
+            var isExistBrand = await documentSession.Query<Brand>()
+                                              .AnyAsync(brand => brand.Name == command.Name, cancellationToken);
+
+            if (isExistBrand)
+                return Result<Unit>.Error(ResponseMessageConstants.Brand.Error.BrandAlreadyExists, (int)HttpStatusCode.BadRequest);
+
             var brand = await documentSession.LoadAsync<Brand>(command.Id, token: cancellationToken);
 
             if (brand is null || brand.Deleted)
-                return Result<Unit>.Error(ResponseMessageConstants.Brand.Error.BrandNotFoundForDelete, (int)HttpStatusCode.NotFound);
+                return Result<Unit>.Error(ResponseMessageConstants.Brand.Error.BrandNotFoundForUpdate, (int)HttpStatusCode.NotFound);
 
             if (!string.IsNullOrWhiteSpace(command.Name))
                 brand.Name = command.Name;
@@ -54,17 +65,23 @@ namespace MiniVSA.CatalogService.Features.Brands.UpdateBrand
             {
                 try
                 {
-                    (string FileName, string FilePath) = await FileHelper.UploadFileToLocalAsync(command.Image.Base64File, FileType.Image, FilePathConstants.BrandFilePaths.Image);
-                    
                     var brandFile = brand.Files
                                  .First(file => file.FileType == FileType.Image);
+
+                    var deleteTask = FileHelper.DeleteFileFromLocalAsync(webHostEnvironment.ContentRootPath, brandFile.Path);
+                    var uploadTask = FileHelper.UploadFileToLocalAsync(command.Image.Base64File, FileType.Image, FilePathConstants.BrandFilePaths.Image);
+
+                    await Task.WhenAll(deleteTask, uploadTask);
+
+                    (string FileName, string FilePath) = await uploadTask;
 
                     brandFile.Name = FileName;
                     brandFile.Path = FilePath;
                     brandFile.Size = FileHelper.GetFileSizeAsMB(command.Image.Base64File);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    logger.LogError("An error occurred while attempting to upload the file. Exception: {Exception}", ex.Message);
                     return Result<Unit>.Error(ResponseMessageConstants.Brand.Error.BrandImageUploadError, (int)HttpStatusCode.InternalServerError);
                 }
             }

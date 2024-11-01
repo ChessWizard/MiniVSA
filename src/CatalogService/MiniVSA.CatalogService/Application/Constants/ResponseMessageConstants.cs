@@ -28,6 +28,8 @@
                 public const string BrandNotFoundForDelete = "Silinecek marka bulunamadı.";
 
                 public const string BrandNotFoundForUpdate = "Güncellenecek marka bulunamadı.";
+
+                public const string AnyBrandUpdateNotFound = "Marka üzerinde herhangi bir güncelleme yapmadınız.";
             }
         }
     }

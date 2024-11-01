@@ -3,8 +3,10 @@ using FileType = MimeDetective.Storage.FileType;
 
 namespace MiniVSA.CatalogService.Application.Utilities
 {
-    public class FileHelper
+    public class FileHelper(IWebHostEnvironment environment)
     {
+        private readonly IWebHostEnvironment _environment = environment;
+
         public static async Task<(string FileName, string FilePath)> UploadFileToLocalAsync(byte[] file, Domain.Enums.FileType fileType, string uploadDirectory)
         {
             if(file is null || !file.Any())
@@ -23,6 +25,16 @@ namespace MiniVSA.CatalogService.Application.Utilities
             await File.WriteAllBytesAsync(filePath, file);
 
             return (uniqueFileName, filePath);
+        }
+
+        public static async Task DeleteFileFromLocalAsync(string basePath, string filePath)
+        {
+            var fullPath = Path.Combine(basePath, filePath);
+
+            if (File.Exists(fullPath))
+            {
+                await Task.Run(() => File.Delete(fullPath));
+            }
         }
 
         public static FileType GetFileAttributesFromByteArray(byte[] fileBinary)

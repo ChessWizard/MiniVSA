@@ -7,6 +7,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{70BE9478-78F
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiniVSA.CatalogService", "src\CatalogService\MiniVSA.CatalogService\MiniVSA.CatalogService.csproj", "{334D4B47-1622-4AFB-BC23-473E251C0510}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "assets", "assets", "{9E7CEFE2-AB77-4615-A99E-2113453D0498}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\..\Downloads\minivsa-architecture.png = ..\..\..\Downloads\minivsa-architecture.png
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

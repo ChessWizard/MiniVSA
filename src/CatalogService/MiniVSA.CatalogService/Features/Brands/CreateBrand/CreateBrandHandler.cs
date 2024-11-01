@@ -33,7 +33,7 @@ namespace MiniVSA.CatalogService.Features.Brands.CreateBrand
         }
     }
 
-    public class CreateBrandHandler(IDocumentSession documentSession) : IRequestHandler<CreateBrandCommand, Result<Unit>>
+    public class CreateBrandHandler(IDocumentSession documentSession) : ICommandHandler<CreateBrandCommand, Result<Unit>>
     {
         public async Task<Result<Unit>> Handle(CreateBrandCommand command, CancellationToken cancellationToken)
         {
